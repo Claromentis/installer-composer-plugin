@@ -11,7 +11,7 @@ class Plugin implements \Composer\Plugin\PluginInterface
 	 */
 	public function activate(\Composer\Composer $composer, \Composer\IO\IOInterface $io)
 	{
-		$installer = new ModuleInstaller($io, $composer, "claromentis-module");
+		$installer = new ModuleInstaller($io, $composer);
 		$composer->getInstallationManager()->addInstaller($installer);
 	}
 }
