@@ -2,7 +2,7 @@
 	"name": "claromentis/installer_composer_plugin",
 	"type": "composer-plugin",
 	"autoload": {
-		"psr-0": {"Claromentis\\Composer": "src/Claromentis/Composer"}
+		"psr-4": {"Claromentis\\Composer": "src/Claromentis/Composer"}
 	},
 	"extra": {
 		"class": "Claromentis\\Composer\\Plugin"
