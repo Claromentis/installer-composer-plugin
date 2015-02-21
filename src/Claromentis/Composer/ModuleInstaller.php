@@ -1,9 +1,10 @@
 <?php
 namespace Claromentis\Composer;
-use Composer\Package\PackageInterface;
-use Composer\Installer\LibraryInstaller;
 
-class Installer extends LibraryInstaller
+use Composer\Installer\LibraryInstaller;
+use Composer\Package\PackageInterface;
+
+class ModuleInstaller extends LibraryInstaller
 {
 	public function getInstallPath(PackageInterface $package)
 	{
@@ -13,6 +14,9 @@ class Installer extends LibraryInstaller
 		if (count($parts) !== 2)
 			throw new \InvalidArgumentException(sprintf("Unexpected package name '%s' without vendor", $name));
 
-		return $parts[1].'/';
+		if ($name == 'claromentis/framework')
+			return 'web/';
+
+		return 'web/intranet/' . $parts[1] . '/';
 	}
 }

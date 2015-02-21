@@ -9,9 +9,5 @@
 	},
 	"require": {
 		"composer-plugin-api": "1.0.0"
-	},
-    "require-dev": {
-      "composer/installers": "*",
-      "composer/composer": "~1.0"
-    }
+	}
 }
