@@ -1,7 +1,7 @@
 <?php
 namespace Claromentis\Composer;
 
-class Plugin implements Composer\Plugin\PluginInterface
+class Plugin implements \Composer\Plugin\PluginInterface
 {
     /**
      * Apply plugin modifications to composer
