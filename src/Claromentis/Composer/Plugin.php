@@ -13,5 +13,8 @@ class Plugin implements \Composer\Plugin\PluginInterface
 	{
 		$installer = new ModuleInstaller($io, $composer);
 		$composer->getInstallationManager()->addInstaller($installer);
+
+		$old_installer = new OldModuleInstaller($io, $composer);
+		$composer->getInstallationManager()->addInstaller($old_installer);
 	}
 }
