@@ -101,12 +101,7 @@ class OldModuleInstaller implements InstallerInterface
 	 */
 	public function getInstallPath(PackageInterface $package)
 	{
-		return $this->getIntranetPath().$this->getApplicationCode($package).'/';
-	}
-
-	protected function getIntranetPath()
-	{
-		return 'web/intranet/';
+		return 'web/intranet/'.$this->getApplicationCode($package).'/';
 	}
 
 	/**
@@ -127,9 +122,7 @@ class OldModuleInstaller implements InstallerInterface
 
 	protected function installCode(PackageInterface $package)
 	{
-		$downloadPath = $this->getIntranetPath();
-		// the zip package is expected to have a single folder with application code
-		// so giving "intranet" folder as download target
+		$downloadPath = $this->getInstallPath($package);
 		$this->downloadManager->download($package, $downloadPath);
 	}
 

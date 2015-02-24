@@ -1,13 +1,17 @@
 {
 	"name": "claromentis/installer_composer_plugin",
 	"type": "composer-plugin",
+    "minimum-stability": "dev",
 	"autoload": {
-		"psr-4": {"Claromentis\\Composer\\": "src/Claromentis/Composer"}
+		"psr-4": { "Claromentis\\Composer\\": "src/Claromentis/Composer"}
 	},
 	"extra": {
 		"class": "Claromentis\\Composer\\Plugin"
 	},
 	"require": {
 		"composer-plugin-api": "1.0.0"
+	},
+	"require-dev": {
+		"composer/composer": "1.*"
 	}
 }
