@@ -1,5 +1,6 @@
 {
 	"name": "claromentis/installer_composer_plugin",
+	"description": "Composer plugin, installer for Claromentis components",
 	"type": "composer-plugin",
     "minimum-stability": "dev",
 	"autoload": {
