@@ -10,11 +10,11 @@ use Composer\Util\Filesystem;
 
 /**
  * Installer for pre-composer modules - those that have distributives as zip files
- * with application directory in it and no composer.json
+ * with application directory in it and probably no composer.json
  *
  * @package Claromentis\Composer
  */
-class OldModuleInstaller implements InstallerInterface
+class ModuleInstallerV7 implements InstallerInterface
 {
 	protected $composer;
 	protected $downloadManager;
@@ -39,7 +39,7 @@ class OldModuleInstaller implements InstallerInterface
 
 	public function supports($packageType)
 	{
-		return $packageType === 'claromentis-old-module';
+		return $packageType === 'claromentis-module-v7';
 	}
 
 	/**
