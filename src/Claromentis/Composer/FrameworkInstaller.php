@@ -107,11 +107,19 @@ class FrameworkInstaller implements InstallerInterface
 	{
 		$installPath = $this->getInstallPath($package);
 
-		$downloadPath = $installPath.'.1';
+		$this->filesystem->ensureDirectoryExists($installPath);
+		if ($this->filesystem->isDirEmpty($installPath))
+		{
+			$this->downloadManager->download($package, $installPath);
+		} else
+		{
+			$downloadPath = $installPath . '.1';
 
-		$this->downloadManager->download($package, $downloadPath);
-		$this->filesystem->copyThenRemove($downloadPath, $installPath);
-		$this->filesystem->rmdir($downloadPath);
+			$this->downloadManager->download($package, $downloadPath);
+			$this->io->write("Download finished, copying the code");
+			$this->filesystem->rename($downloadPath, $installPath);
+			$this->filesystem->rmdir($downloadPath);
+		}
 	}
 
 	protected function removeCode(PackageInterface $package)
