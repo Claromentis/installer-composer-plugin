@@ -14,40 +14,11 @@ use Composer\Util\Filesystem;
  *
  * @package Claromentis\Composer
  */
-class FrameworkInstaller implements InstallerInterface
+class FrameworkInstaller extends BaseInstaller
 {
-	protected $composer;
-	protected $downloadManager;
-	protected $io;
-	protected $filesystem;
-
-	/**
-	 * Initializes library installer.
-	 *
-	 * @param IOInterface $io
-	 * @param Composer    $composer
-	 * @param Filesystem  $filesystem
-	 */
-	public function __construct(IOInterface $io, Composer $composer, Filesystem $filesystem = null)
-	{
-		$this->composer = $composer;
-		$this->downloadManager = $composer->getDownloadManager();
-		$this->io = $io;
-
-		$this->filesystem = $filesystem ?: new Filesystem();
-	}
-
 	public function supports($packageType)
 	{
 		return $packageType === 'claromentis-framework';
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function isInstalled(InstalledRepositoryInterface $repo, PackageInterface $package)
-	{
-		return $repo->hasPackage($package) && is_readable($this->getInstallPath($package));
 	}
 
 	/**
@@ -103,25 +74,6 @@ class FrameworkInstaller implements InstallerInterface
 		return 'web';
 	}
 
-	protected function installCode(PackageInterface $package)
-	{
-		$installPath = $this->getInstallPath($package);
-
-		$this->filesystem->ensureDirectoryExists($installPath);
-		if ($this->filesystem->isDirEmpty($installPath))
-		{
-			$this->downloadManager->download($package, $installPath);
-		} else
-		{
-			$downloadPath = $installPath . '.1';
-
-			$this->downloadManager->download($package, $downloadPath);
-			$this->io->write("    Download finished, copying the code");
-			$this->filesystem->copyThenRemove($downloadPath, $installPath);
-			$this->filesystem->rmdir($downloadPath);
-		}
-	}
-
 	protected function removeCode(PackageInterface $package)
 	{
 		$downloadPath = $this->getInstallPath($package);
@@ -129,15 +81,4 @@ class FrameworkInstaller implements InstallerInterface
 		$this->filesystem->removeDirectory($downloadPath);
 	}
 
-	/**
-	 * Run phing action for the specified module
-	 *
-	 * @param string $app_code
-	 * @param string $action
-	 */
-	protected function runPhing($app_code, $action)
-	{
-		$this->io->write('    <warning>===Please run this command===</warning>');
-		$this->io->write("    phing -Dapp={$app_code} $action");
-	}
 }

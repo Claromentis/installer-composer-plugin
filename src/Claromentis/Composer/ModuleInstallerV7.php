@@ -14,40 +14,11 @@ use Composer\Util\Filesystem;
  *
  * @package Claromentis\Composer
  */
-class ModuleInstallerV7 implements InstallerInterface
+class ModuleInstallerV7 extends BaseInstaller
 {
-	protected $composer;
-	protected $downloadManager;
-	protected $io;
-	protected $filesystem;
-
-	/**
-	 * Initializes library installer.
-	 *
-	 * @param IOInterface $io
-	 * @param Composer    $composer
-	 * @param Filesystem  $filesystem
-	 */
-	public function __construct(IOInterface $io, Composer $composer, Filesystem $filesystem = null)
-	{
-		$this->composer = $composer;
-		$this->downloadManager = $composer->getDownloadManager();
-		$this->io = $io;
-
-		$this->filesystem = $filesystem ?: new Filesystem();
-	}
-
 	public function supports($packageType)
 	{
 		return $packageType === 'claromentis-module-v7' || $packageType === 'claromentis-module';
-	}
-
-	/**
-	 * {@inheritDoc}
-	 */
-	public function isInstalled(InstalledRepositoryInterface $repo, PackageInterface $package)
-	{
-		return $repo->hasPackage($package) && is_readable($this->getInstallPath($package));
 	}
 
 	/**
@@ -91,9 +62,6 @@ class ModuleInstallerV7 implements InstallerInterface
 			throw new \InvalidArgumentException('Package is not installed: '.$package);
 		}
 
-		if ($package->getName() == 'claromentis/framework')
-			throw new \InvalidArgumentException('Cannot uninstall framework: '.$package);
-
 		$this->removeCode($package);
 		$repo->removePackage($package);
 		$this->runPhing($this->getApplicationCode($package), 'uninstall');
@@ -104,9 +72,6 @@ class ModuleInstallerV7 implements InstallerInterface
 	 */
 	public function getInstallPath(PackageInterface $package)
 	{
-		if ($package->getName() == 'claromentis/framework')
-			return 'web';
-
 		return 'web/intranet/'.$this->getApplicationCode($package).'/';
 	}
 
@@ -126,31 +91,11 @@ class ModuleInstallerV7 implements InstallerInterface
 		return $app_name;
 	}
 
-	protected function installCode(PackageInterface $package)
-	{
-		$downloadPath = $this->getInstallPath($package);
-		$this->downloadManager->download($package, $downloadPath);
-	}
-
 	protected function removeCode(PackageInterface $package)
 	{
-		if ($package->getName() == 'claromentis/framework')
-			return ;
-
 		$downloadPath = $this->getInstallPath($package);
 		$this->downloadManager->remove($package, $downloadPath);
 		$this->filesystem->removeDirectory($downloadPath);
 	}
 
-	/**
-	 * Run phing action for the specified module
-	 *
-	 * @param string $app_code
-	 * @param string $action
-	 */
-	protected function runPhing($app_code, $action)
-	{
-		$this->io->write('    <warning>===Please run this command===</warning>');
-		$this->io->write("    phing -Dapp={$app_code} $action");
-	}
 }
