@@ -116,8 +116,8 @@ class FrameworkInstaller implements InstallerInterface
 			$downloadPath = $installPath . '.1';
 
 			$this->downloadManager->download($package, $downloadPath);
-			$this->io->write("Download finished, copying the code");
-			$this->filesystem->rename($downloadPath, $installPath);
+			$this->io->write("    Download finished, copying the code");
+			$this->filesystem->copyThenRemove($downloadPath, $installPath);
 			$this->filesystem->rmdir($downloadPath);
 		}
 	}
