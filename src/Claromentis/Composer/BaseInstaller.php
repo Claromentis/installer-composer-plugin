@@ -72,18 +72,25 @@ abstract class BaseInstaller implements InstallerInterface
 	 */
 	protected function runPhing($app_code, $action)
 	{
+		/*
 		$process = $this->getProcess();
 		$process->setTimeout(null);
 
+		$old_pwd = getcwd();
+		chdir('web');
+
 		if (defined('PHP_WINDOWS_VERSION_BUILD'))
-			$phing_path = 'vendor/bin/phing.bat';
+			$phing_path = '..\\vendor\\bin\\phing.bat';
 		else
-			$phing_path = 'vendor/bin/phing';
+			$phing_path = '../vendor/bin/phing';
 
 		$process->execute("$phing_path -Dapp={$app_code} $action");
 
-		//$this->io->write('    <warning>===Please run this command===</warning>');
-		//$this->io->write("    phing -Dapp={$app_code} $action");
+		chdir($old_pwd);
+		*/
+
+		$this->io->write('    <warning>===Please run this command===</warning>');
+		$this->io->write("    phing -Dapp={$app_code} $action");
 	}
 
 	protected function getProcess()
