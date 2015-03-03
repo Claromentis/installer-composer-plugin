@@ -39,7 +39,7 @@ class ModuleInstallerV7 implements InstallerInterface
 
 	public function supports($packageType)
 	{
-		return $packageType === 'claromentis-module-v7';
+		return $packageType === 'claromentis-module-v7' || $packageType === 'claromentis-module';
 	}
 
 	/**
@@ -91,6 +91,9 @@ class ModuleInstallerV7 implements InstallerInterface
 			throw new \InvalidArgumentException('Package is not installed: '.$package);
 		}
 
+		if ($package->getName() == 'claromentis/framework')
+			throw new \InvalidArgumentException('Cannot uninstall framework: '.$package);
+
 		$this->removeCode($package);
 		$repo->removePackage($package);
 		$this->runPhing($this->getApplicationCode($package), 'uninstall');
@@ -101,6 +104,9 @@ class ModuleInstallerV7 implements InstallerInterface
 	 */
 	public function getInstallPath(PackageInterface $package)
 	{
+		if ($package->getName() == 'claromentis/framework')
+			return 'web';
+
 		return 'web/intranet/'.$this->getApplicationCode($package).'/';
 	}
 
@@ -128,6 +134,9 @@ class ModuleInstallerV7 implements InstallerInterface
 
 	protected function removeCode(PackageInterface $package)
 	{
+		if ($package->getName() == 'claromentis/framework')
+			return ;
+
 		$downloadPath = $this->getInstallPath($package);
 		$this->downloadManager->remove($package, $downloadPath);
 		$this->filesystem->removeDirectory($downloadPath);
