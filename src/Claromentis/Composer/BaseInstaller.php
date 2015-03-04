@@ -91,7 +91,6 @@ abstract class BaseInstaller implements InstallerInterface
 		Phing::shutdown();
 
 		chdir($old_pwd);
-
 		/*
 		$this->io->write('    <warning>===Please run this command===</warning>');
 		$this->io->write("    phing -Dapp={$app_code} $action");
