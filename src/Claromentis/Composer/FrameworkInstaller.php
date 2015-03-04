@@ -31,6 +31,9 @@ class FrameworkInstaller extends BaseInstaller
 			$repo->addPackage(clone $package);
 		}
 
+		$this->filesystem->ensureDirectoryExists('data');
+		$this->filesystem->ensureDirectoryExists('local_data');
+
 		$this->runPhing('core', 'install');
 	}
 
