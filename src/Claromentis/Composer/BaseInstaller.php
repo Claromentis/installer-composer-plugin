@@ -8,6 +8,7 @@ use Composer\Package\PackageInterface;
 use Composer\Repository\InstalledRepositoryInterface;
 use Composer\Util\Filesystem;
 use Composer\Util\ProcessExecutor;
+use Phing;
 
 /**
  * Base class for common functions of framework and modules installers
@@ -89,8 +90,26 @@ abstract class BaseInstaller implements InstallerInterface
 		chdir($old_pwd);
 		*/
 
+		/*
 		$this->io->write('    <warning>===Please run this command===</warning>');
 		$this->io->write("    phing -Dapp={$app_code} $action");
+		*/
+
+		$phing_path = "../vendor/phing/phing/classes";
+		set_include_path(
+			$phing_path .
+			PATH_SEPARATOR .
+			get_include_path()
+		);
+
+		require_once($phing_path.'/phing/Phing.php');
+		Phing::startup();
+		$args = array(
+			'-Dapp='.$app_code,
+			$action,
+		);
+		Phing::fire($args);
+		Phing::shutdown();
 	}
 
 	protected function getProcess()
