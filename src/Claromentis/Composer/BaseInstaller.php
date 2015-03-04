@@ -84,8 +84,7 @@ abstract class BaseInstaller implements InstallerInterface
 				E_USER_NOTICE     => "User notice",
 				E_STRICT          => "Runtime Notice"
 			);
-			$io->writeError($errors[$errno].": $errmsg at $filename:$linenum");
-			//echo $errors[$errno].": $errmsg at $filename:$linenum\n";
+			$io->write('<warning>'.$errors[$errno].": $errmsg at $filename:$linenum</warning>");
 			return true;
 		});
 
