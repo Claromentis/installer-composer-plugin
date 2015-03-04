@@ -61,7 +61,6 @@ abstract class BaseInstaller implements InstallerInterface
 			$this->downloadManager->download($package, $downloadPath);
 			$this->io->write("    Download finished, copying the code");
 			$this->filesystem->copyThenRemove($downloadPath, $installPath);
-			$this->filesystem->rmdir($downloadPath);
 		}
 	}
 
@@ -73,35 +72,15 @@ abstract class BaseInstaller implements InstallerInterface
 	 */
 	protected function runPhing($app_code, $action)
 	{
-		/*
-		$process = $this->getProcess();
-		$process->setTimeout(null);
-
 		$old_pwd = getcwd();
 		chdir('web');
 
-		if (defined('PHP_WINDOWS_VERSION_BUILD'))
-			$phing_path = '..\\vendor\\bin\\phing.bat';
-		else
-			$phing_path = '../vendor/bin/phing';
-
-		$process->execute("$phing_path -Dapp={$app_code} $action");
-
-		chdir($old_pwd);
-		*/
-
-		/*
-		$this->io->write('    <warning>===Please run this command===</warning>');
-		$this->io->write("    phing -Dapp={$app_code} $action");
-		*/
-
-		$phing_path = "../vendor/phing/phing/classes";
+		$phing_path = realpath("../vendor/phing/phing/classes");
 		set_include_path(
 			$phing_path .
 			PATH_SEPARATOR .
 			get_include_path()
 		);
-
 		require_once($phing_path.'/phing/Phing.php');
 		Phing::startup();
 		$args = array(
@@ -110,6 +89,13 @@ abstract class BaseInstaller implements InstallerInterface
 		);
 		Phing::fire($args);
 		Phing::shutdown();
+
+		chdir($old_pwd);
+
+		/*
+		$this->io->write('    <warning>===Please run this command===</warning>');
+		$this->io->write("    phing -Dapp={$app_code} $action");
+		*/
 	}
 
 	protected function getProcess()
