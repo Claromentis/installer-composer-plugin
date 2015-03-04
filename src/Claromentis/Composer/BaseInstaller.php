@@ -72,8 +72,9 @@ abstract class BaseInstaller implements InstallerInterface
 	 */
 	protected function runPhing($app_code, $action)
 	{
-		set_error_handler(function ($errno, $errmsg, $filename, $linenum) {
-			if (!(error_reporting() & $errno)) return false;
+		$io = $this->io;
+		set_error_handler(function ($errno, $errmsg, $filename, $linenum) use ($io) {
+			if (!(error_reporting() & $errno)) return true;
 			$errors = array (
 				E_ERROR           => "Error",
 				E_WARNING         => "Warning",
@@ -83,7 +84,8 @@ abstract class BaseInstaller implements InstallerInterface
 				E_USER_NOTICE     => "User notice",
 				E_STRICT          => "Runtime Notice"
 			);
-			echo $errors[$errno].": $errmsg at $filename:$linenum\n";
+			$io->writeError($errors[$errno].": $errmsg at $filename:$linenum");
+			//echo $errors[$errno].": $errmsg at $filename:$linenum\n";
 			return true;
 		});
 
