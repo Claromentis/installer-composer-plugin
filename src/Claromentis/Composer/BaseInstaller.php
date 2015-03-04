@@ -72,6 +72,21 @@ abstract class BaseInstaller implements InstallerInterface
 	 */
 	protected function runPhing($app_code, $action)
 	{
+		set_error_handler(function ($errno, $errmsg, $filename, $linenum) {
+			if (!(error_reporting() & $errno)) return false;
+			$errors = array (
+				E_ERROR           => "Error",
+				E_WARNING         => "Warning",
+				E_NOTICE          => "Notice",
+				E_USER_ERROR      => "User error",
+				E_USER_WARNING    => "User warning",
+				E_USER_NOTICE     => "User notice",
+				E_STRICT          => "Runtime Notice"
+			);
+			echo $errors[$errno].": $errmsg at $filename:$linenum\n";
+			return true;
+		});
+
 		$old_pwd = getcwd();
 		chdir('web');
 
@@ -91,6 +106,8 @@ abstract class BaseInstaller implements InstallerInterface
 		Phing::shutdown();
 
 		chdir($old_pwd);
+
+		restore_error_handler();
 		/*
 		$this->io->write('    <warning>===Please run this command===</warning>');
 		$this->io->write("    phing -Dapp={$app_code} $action");
