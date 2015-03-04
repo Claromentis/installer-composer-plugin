@@ -1,12 +1,11 @@
 <?php
 namespace Claromentis\Composer;
 
-use Composer\Composer;
-use Composer\Installer\InstallerInterface;
-use Composer\IO\IOInterface;
+use Composer\DependencyResolver\Operation\InstallOperation;
+use Composer\DependencyResolver\Operation\UninstallOperation;
+use Composer\DependencyResolver\Operation\UpdateOperation;
 use Composer\Package\PackageInterface;
 use Composer\Repository\InstalledRepositoryInterface;
-use Composer\Util\Filesystem;
 
 /**
  * Installer for pre-composer modules - those that have distributives as zip files
@@ -30,8 +29,6 @@ class ModuleInstallerV7 extends BaseInstaller
 		if (!$repo->hasPackage($package)) {
 			$repo->addPackage(clone $package);
 		}
-
-		$this->runPhing($this->getApplicationCode($package), 'install');
 	}
 
 	/**
@@ -49,8 +46,6 @@ class ModuleInstallerV7 extends BaseInstaller
 		if (!$repo->hasPackage($target)) {
 			$repo->addPackage(clone $target);
 		}
-
-		$this->runPhing($this->getApplicationCode($target), 'upgrade');
 	}
 
 	/**
@@ -64,7 +59,6 @@ class ModuleInstallerV7 extends BaseInstaller
 
 		$this->removeCode($package);
 		$repo->removePackage($package);
-		$this->runPhing($this->getApplicationCode($package), 'uninstall');
 	}
 
 	/**
@@ -98,4 +92,21 @@ class ModuleInstallerV7 extends BaseInstaller
 		$this->filesystem->removeDirectory($downloadPath);
 	}
 
+	public function onInstall(InstallOperation $operation)
+	{
+		$package = $operation->getPackage();
+		$this->runPhing($this->getApplicationCode($package), 'install');
+	}
+
+	public function onUpdate(UpdateOperation $operation)
+	{
+		$package = $operation->getTargetPackage();
+		$this->runPhing($this->getApplicationCode($package), 'upgrade');
+	}
+
+	public function onUninstall(UninstallOperation $operation)
+	{
+		$package = $operation->getPackage();
+		$this->runPhing($this->getApplicationCode($package), 'uninstall');
+	}
 }

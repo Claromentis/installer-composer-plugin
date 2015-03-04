@@ -1,12 +1,10 @@
 <?php
 namespace Claromentis\Composer;
 
-use Composer\Composer;
-use Composer\Installer\InstallerInterface;
-use Composer\IO\IOInterface;
+use Composer\DependencyResolver\Operation\InstallOperation;
+use Composer\DependencyResolver\Operation\UpdateOperation;
 use Composer\Package\PackageInterface;
 use Composer\Repository\InstalledRepositoryInterface;
-use Composer\Util\Filesystem;
 
 /**
  * Installer for pre-composer modules - those that have distributives as zip files
@@ -33,8 +31,6 @@ class FrameworkInstaller extends BaseInstaller
 
 		$this->filesystem->ensureDirectoryExists('data');
 		$this->filesystem->ensureDirectoryExists('local_data');
-
-		$this->runPhing('core', 'install');
 	}
 
 	/**
@@ -52,8 +48,6 @@ class FrameworkInstaller extends BaseInstaller
 		if (!$repo->hasPackage($target)) {
 			$repo->addPackage(clone $target);
 		}
-
-		$this->runPhing('core', 'upgrade');
 	}
 
 	/**
@@ -84,4 +78,13 @@ class FrameworkInstaller extends BaseInstaller
 		$this->filesystem->removeDirectory($downloadPath);
 	}
 
+	public function onInstall(InstallOperation $operation)
+	{
+		$this->runPhing('core', 'install');
+	}
+
+	public function onUpdate(UpdateOperation $operation)
+	{
+		$this->runPhing('core', 'upgrade');
+	}
 }
