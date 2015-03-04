@@ -1,22 +1,24 @@
 {
-	"name": "claromentis/installer_composer_plugin",
-	"description": "Composer plugin, installer for Claromentis components",
-	"type": "composer-plugin",
-	"minimum-stability": "dev",
-	"autoload": {
-		"psr-4": { "Claromentis\\Composer\\": "src/Claromentis/Composer"}
-	},
-	"extra": {
-		"class": "Claromentis\\Composer\\Plugin",
-		"branch-alias": {
-			"dev-master": "1.0.x-dev"
-		}
-	},
-	"require": {
-		"composer-plugin-api": "1.0.0",
-		"phing/phing": "2.x"
-	},
-	"require-dev": {
-		"composer/composer": "1.*"
-	}
+    "name": "claromentis/installer-composer-plugin",
+    "description": "Composer plugin, installer for Claromentis components",
+    "type": "composer-plugin",
+    "autoload": {
+        "psr-4": { "Claromentis\\Composer\\": "src/Claromentis/Composer"}
+    },
+    "extra": {
+        "class": "Claromentis\\Composer\\Plugin",
+        "branch-alias": {
+            "dev-master": "1.0.x-dev"
+        }
+    },
+    "require": {
+        "composer-plugin-api": "1.0.0",
+        "phing/phing": "2.x"
+    },
+    "require-dev": {
+        "composer/composer": "1.*@dev"
+    },
+    "replace": {
+        "claromentis/installer_composer_plugin": "self.version"
+    }
 }
