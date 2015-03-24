@@ -39,27 +39,33 @@ class PhingRunner
 		$old_pwd = getcwd();
 		chdir('web');
 
-		$phing_path = realpath("../vendor/phing/phing/classes");
-		set_include_path(
-			$phing_path .
-			PATH_SEPARATOR .
-			get_include_path()
-		);
-		require_once($phing_path.'/phing/Phing.php');
-		Phing::startup();
-		$args = array(
-			'-Dapp='.$app_code,
-			$action,
-		);
-		Phing::fire($args);
-		Phing::shutdown();
+		$e = null;
+		try
+		{
+			$phing_path = realpath("../vendor/phing/phing/classes");
+			set_include_path(
+				$phing_path .
+				PATH_SEPARATOR .
+				get_include_path()
+			);
+			require_once($phing_path . '/phing/Phing.php');
+			Phing::startup();
+			$args = array(
+				'-Dapp=' . $app_code,
+				$action,
+			);
+			Phing::fire($args);
+			Phing::shutdown();
+		} catch (\BuildException $e)
+		{
+		}
 
 		chdir($old_pwd);
 
 		restore_error_handler();
 
-		//$this->io->write('    <warning>===Please run this command===</warning>');
-		//$this->io->write("    phing -Dapp={$app_code} $action");
+		if ($e !== null)
+			throw $e;
 	}
 
 }

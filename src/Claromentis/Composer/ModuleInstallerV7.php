@@ -95,7 +95,15 @@ class ModuleInstallerV7 extends BaseInstaller
 	public function onInstall(InstallOperation $operation)
 	{
 		$package = $operation->getPackage();
-		$this->runPhing($this->getApplicationCode($package), 'install');
+		try
+		{
+			$this->runPhing($this->getApplicationCode($package), 'install');
+		} catch (\Exception $e)
+		{
+			$this->io->writeError("\n\n<warning>Got exception while running phing task. ".get_class($e).': '.$e->getMessage()." </warning>");
+			$this->io->writeError("<info>Trying to run upgrade instead</info>");
+			$this->runPhing($this->getApplicationCode($package), 'upgrade');
+		}
 	}
 
 	public function onUpdate(UpdateOperation $operation)
@@ -107,6 +115,12 @@ class ModuleInstallerV7 extends BaseInstaller
 	public function onUninstall(UninstallOperation $operation)
 	{
 		$package = $operation->getPackage();
-		$this->runPhing($this->getApplicationCode($package), 'uninstall');
+		$code = $this->getApplicationCode($package);
+		if ($this->io->askConfirmation("Do you want to delete all database tables of application '$code'?", false))
+			$this->runPhing($code, 'uninstall');
+		else
+			$this->io->write("Application code is going to be removed, but the database still has all data");
+
+		$this->io->write("<warning>Please manually delete all references to $code from the core config file</warning>");
 	}
 }

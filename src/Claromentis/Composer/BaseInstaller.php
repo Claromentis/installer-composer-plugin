@@ -37,6 +37,8 @@ abstract class BaseInstaller implements InstallerInterface
 		$this->io = $io;
 
 		$this->filesystem = $filesystem ?: new Filesystem();
+
+
 	}
 
 	/**

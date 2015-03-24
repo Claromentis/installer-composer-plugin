@@ -80,11 +80,23 @@ class FrameworkInstaller extends BaseInstaller
 
 	public function onInstall(InstallOperation $operation)
 	{
-		$this->runPhing('core', 'install');
+		if ($this->CoreConfigExists())
+		{
+			$this->io->write('<warning>Core config file already exists, so assuming this is an upgrade from pre-installer version. Running "phing upgrade"');
+			$this->runPhing('core', 'upgrade');
+		} else
+		{
+			$this->runPhing('core', 'install');
+		}
 	}
 
 	public function onUpdate(UpdateOperation $operation)
 	{
 		$this->runPhing('core', 'upgrade');
+	}
+
+	private function CoreConfigExists()
+	{
+		return file_exists('web/intranet/common/config.php');
 	}
 }
