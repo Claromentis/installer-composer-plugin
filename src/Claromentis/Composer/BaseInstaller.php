@@ -73,9 +73,10 @@ abstract class BaseInstaller implements InstallerInterface
 			throw new \InvalidArgumentException('Package is not installed: '.$initial);
 		}
 
-		if ($initial->getInstallationSource() == 'source' && $target->getInstallationSource() == 'source')
+		if ($initial->getInstallationSource() == 'source' && $initial->getSourceType() == 'git' && $target->getSourceType() == 'git')
+		{
 			$this->downloadManager->update($initial, $target, $this->getInstallPath($target));
-		else
+		} else
 		{
 			$this->installCode($target);
 			$repo->removePackage($initial);
