@@ -67,6 +67,25 @@ abstract class BaseInstaller implements InstallerInterface
 		}
 	}
 
+	public function updateCode(InstalledRepositoryInterface $repo, PackageInterface $initial, PackageInterface $target)
+	{
+		if (!$repo->hasPackage($initial)) {
+			throw new \InvalidArgumentException('Package is not installed: '.$initial);
+		}
+
+		if ($initial->getInstallationSource() == 'source' && $target->getInstallationSource() == 'source')
+			$this->downloadManager->update($initial, $target, $this->getInstallPath($target));
+		else
+		{
+			$this->installCode($target);
+			$repo->removePackage($initial);
+			if (!$repo->hasPackage($target))
+			{
+				$repo->addPackage(clone $target);
+			}
+		}
+	}
+
 	/**
 	 * Run phing action for the specified module
 	 *

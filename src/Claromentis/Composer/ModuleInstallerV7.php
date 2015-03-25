@@ -36,16 +36,7 @@ class ModuleInstallerV7 extends BaseInstaller
 	 */
 	public function update(InstalledRepositoryInterface $repo, PackageInterface $initial, PackageInterface $target)
 	{
-		if (!$repo->hasPackage($initial)) {
-			throw new \InvalidArgumentException('Package is not installed: '.$initial);
-		}
-
-		//$this->updateCode($initial, $target);
-		$this->installCode($target);
-		$repo->removePackage($initial);
-		if (!$repo->hasPackage($target)) {
-			$repo->addPackage(clone $target);
-		}
+		$this->updateCode($repo, $initial, $target);
 	}
 
 	/**
