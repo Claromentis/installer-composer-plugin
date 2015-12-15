@@ -36,18 +36,20 @@ class PhingRunner
 			return true;
 		});
 
+		$phing_path = is_dir("../vendor/phing/phing/classes") ? realpath("../vendor/phing/phing/classes") : realpath("vendor/phing/phing/classes");
+		set_include_path(
+			$phing_path .
+			PATH_SEPARATOR .
+			get_include_path()
+		);
+
 		$old_pwd = getcwd();
-		chdir('web');
+		if (file_exists('web/build.xml') && !file_exists('./build.xml'))
+			chdir('web');
 
 		$e = null;
 		try
 		{
-			$phing_path = realpath("../vendor/phing/phing/classes");
-			set_include_path(
-				$phing_path .
-				PATH_SEPARATOR .
-				get_include_path()
-			);
 			require_once($phing_path . '/phing/Phing.php');
 			Phing::startup();
 			$args = array(
