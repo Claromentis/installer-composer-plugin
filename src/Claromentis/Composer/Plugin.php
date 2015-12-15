@@ -18,11 +18,14 @@ class Plugin implements \Composer\Plugin\PluginInterface, EventSubscriberInterfa
 	 */
 	public function activate(\Composer\Composer $composer, \Composer\IO\IOInterface $io)
 	{
-		$installer = new FrameworkInstaller($io, $composer);
-		$composer->getInstallationManager()->addInstaller($installer);
+		$core_installer_v7 = new FrameworkInstaller($io, $composer);
+		$composer->getInstallationManager()->addInstaller($core_installer_v7);
 
-		$old_installer = new ModuleInstallerV7($io, $composer);
-		$composer->getInstallationManager()->addInstaller($old_installer);
+		$core_installer_v8 = new FrameworkInstallerV8($io, $composer);
+		$composer->getInstallationManager()->addInstaller($core_installer_v8);
+
+		$module_installer = new ModuleInstallerV7($io, $composer);
+		$composer->getInstallationManager()->addInstaller($module_installer);
 	}
 
 	/**
