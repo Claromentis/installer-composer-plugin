@@ -57,7 +57,26 @@ class FrameworkInstallerV8 extends BaseInstaller
 	 */
 	public function getInstallPath(PackageInterface $package)
 	{
-		return '.';
+		return '../';
+	}
+
+	protected function installCode(PackageInterface $package)
+	{
+		$installPath = $this->getInstallPath($package);
+
+		$this->filesystem->ensureDirectoryExists($installPath);
+		if ($this->filesystem->isDirEmpty($installPath))
+		{
+			$this->downloadManager->download($package, $installPath);
+		} else
+		{
+			$downloadPath = $installPath . '.1';
+
+			$this->downloadManager->download($package, $downloadPath);
+			$this->io->write("    Download finished, copying the code");
+			$this->filesystem->removeDirectory($downloadPath.'/vendor');
+			$this->filesystem->copyThenRemove($downloadPath, $installPath);
+		}
 	}
 
 	protected function removeCode(PackageInterface $package)
