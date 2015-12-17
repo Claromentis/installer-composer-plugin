@@ -40,7 +40,17 @@ class PhingRunner
 			return true;
 		});
 
-		$phing_path = realpath(is_dir("../vendor/phing/phing/classes") ? "../vendor/phing/phing/classes" : "vendor/phing/phing/classes");
+		if (is_dir("../vendor_core/phing/phing/classes")) // installation from "claromentis/installer" folder
+			$phing_path = "../vendor_core/phing/phing/classes";
+		elseif (is_dir("vendor/phing/phing/classes"))     // installation from "claromentis" folder (usually, by a developer or Cla 7)
+			$phing_path = "vendor/phing/phing/classes";
+		elseif (is_dir("../vendor/phing/phing/classes"))  // should not be needed, but still included
+			$phing_path = "../vendor/phing/phing/classes";
+		else
+			throw new \Exception("Cannot find phing");
+
+		$phing_path = realpath($phing_path);
+
 		set_include_path(
 			$phing_path .
 			PATH_SEPARATOR .
