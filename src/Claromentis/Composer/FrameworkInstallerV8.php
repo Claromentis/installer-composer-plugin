@@ -65,7 +65,7 @@ class FrameworkInstallerV8 extends BaseInstaller
 		$installPath = $this->getInstallPath($package);
 
 		$this->filesystem->ensureDirectoryExists($installPath);
-		if ($this->filesystem->isDirEmpty($installPath))
+		if (!is_dir($installPath."web") || $this->filesystem->isDirEmpty($installPath.'web'))
 		{
 			$this->downloadManager->download($package, $installPath);
 		} else
@@ -74,6 +74,7 @@ class FrameworkInstallerV8 extends BaseInstaller
 
 			$this->downloadManager->download($package, $downloadPath);
 			$this->io->write("    Download finished, copying the code");
+			//$this->filesystem->rename($downloadPath.'/vendor', $downloadPath.'/vendor_core');
 			$this->filesystem->removeDirectory($downloadPath.'/vendor');
 			$this->filesystem->copyThenRemove($downloadPath, $installPath);
 		}
