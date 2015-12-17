@@ -3,6 +3,7 @@
 namespace Claromentis\Composer;
 use Composer\IO\IOInterface;
 use Phing;
+use Symfony\Component\Process\Process;
 
 /**
  * Class that starts Phing operation
@@ -24,63 +25,22 @@ class PhingRunner
 
 	public function Run($app_code, $action)
 	{
-		$io = $this->io;
-		set_error_handler(function ($errno, $errmsg, $filename, $linenum) use ($io) {
-			if (!(error_reporting() & $errno)) return true;
-			$errors = array (
-				E_ERROR           => "Error",
-				E_WARNING         => "Warning",
-				E_NOTICE          => "Notice",
-				E_USER_ERROR      => "User error",
-				E_USER_WARNING    => "User warning",
-				E_USER_NOTICE     => "User notice",
-				E_STRICT          => "Runtime Notice"
-			);
-			$io->write('<warning>'.$errors[$errno].": $errmsg at $filename:$linenum</warning>");
-			return true;
-		});
-
-		if (is_dir("../vendor_core/phing/phing/classes")) // installation from "claromentis/installer" folder
-			$phing_path = "../vendor_core/phing/phing/classes";
-		elseif (is_dir("vendor/phing/phing/classes"))     // installation from "claromentis" folder (usually, by a developer or Cla 7)
-			$phing_path = "vendor/phing/phing/classes";
-		elseif (is_dir("../vendor/phing/phing/classes"))  // should not be needed, but still included
-			$phing_path = "../vendor/phing/phing/classes";
+		if (is_dir("../vendor_core/phing")) // installation from "claromentis/installer" folder
+			$phing_path = "../vendor_core/phing";
+		elseif (is_dir("vendor/phing"))     // installation from "claromentis" folder (usually, by a developer or Cla 7)
+			$phing_path = "vendor/phing";
+		elseif (is_dir("../vendor/phing"))  // should not be needed, but still included
+			$phing_path = "../vendor/phing";
 		else
 			throw new \Exception("Cannot find phing");
 
 		$phing_path = realpath($phing_path);
 
-		set_include_path(
-			$phing_path .
-			PATH_SEPARATOR .
-			get_include_path()
-		);
-
-		$old_pwd = getcwd();
-		chdir($this->base_dir);
-
-		$e = null;
-		try
-		{
-			require_once($phing_path . '/phing/Phing.php');
-			Phing::startup();
-			$args = array(
-				'-Dapp=' . $app_code,
-				$action,
-			);
-			Phing::fire($args);
-			Phing::shutdown();
-		} catch (\BuildException $e)
-		{
-		}
-
-		chdir($old_pwd);
+		$process = new Process($phing_path.DIRECTORY_SEPARATOR."phing -Dapp=$app_code $action", $this->base_dir);
+		$process->setPty(true);
+		$process->run();
 
 		restore_error_handler();
-
-		if ($e !== null)
-			throw $e;
 	}
 
 }
