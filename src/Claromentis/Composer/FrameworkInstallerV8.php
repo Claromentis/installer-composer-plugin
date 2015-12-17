@@ -72,9 +72,10 @@ class FrameworkInstallerV8 extends BaseInstaller
 		$this->io->write("    Download finished, copying the code");
 		if ($this->CoreConfigExists())
 		{
-			//$this->filesystem->rename($downloadPath.'/vendor', $downloadPath.'/vendor_core');
 			$this->filesystem->removeDirectory($downloadPath.'/vendor');
-			//$this->downloadManager->download($package, $installPath);
+		} else
+		{
+			$this->filesystem->rename($downloadPath.'/vendor', $downloadPath.'/vendor_core');
 		}
 		$this->filesystem->copyThenRemove($downloadPath, $installPath);
 	}

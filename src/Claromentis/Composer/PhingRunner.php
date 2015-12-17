@@ -18,9 +18,8 @@ class PhingRunner
 	{
 		$this->io = $io;
 		$this->base_dir = $base_dir;
-		$this->io->write("Debug: phing path is: ".$base_dir);
 		if (!file_exists($base_dir.'/build.xml'))
-			$this->io->write("build.xml doesn't exist there, failure imminent");
+			$this->io->write("<error>$base_dir/build.xml doesn't exist there, failure imminent</error>");
 	}
 
 	public function Run($app_code, $action)
@@ -41,7 +40,7 @@ class PhingRunner
 			return true;
 		});
 
-		$phing_path = is_dir("../vendor/phing/phing/classes") ? realpath("../vendor/phing/phing/classes") : realpath("vendor/phing/phing/classes");
+		$phing_path = realpath(is_dir("../vendor/phing/phing/classes") ? "../vendor/phing/phing/classes" : "vendor/phing/phing/classes");
 		set_include_path(
 			$phing_path .
 			PATH_SEPARATOR .
