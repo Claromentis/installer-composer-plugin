@@ -65,19 +65,18 @@ class FrameworkInstallerV8 extends BaseInstaller
 		$installPath = $this->getInstallPath($package);
 
 		$this->filesystem->ensureDirectoryExists($installPath);
-		if (!is_dir($installPath."web") || $this->filesystem->isDirEmpty($installPath.'web'))
-		{
-			$this->downloadManager->download($package, $installPath);
-		} else
-		{
-			$downloadPath = $installPath . '.1';
 
-			$this->downloadManager->download($package, $downloadPath);
-			$this->io->write("    Download finished, copying the code");
+		$downloadPath = $installPath . 'framework.temp';
+
+		$this->downloadManager->download($package, $downloadPath);
+		$this->io->write("    Download finished, copying the code");
+		if ($this->CoreConfigExists())
+		{
 			//$this->filesystem->rename($downloadPath.'/vendor', $downloadPath.'/vendor_core');
 			$this->filesystem->removeDirectory($downloadPath.'/vendor');
-			$this->filesystem->copyThenRemove($downloadPath, $installPath);
+			//$this->downloadManager->download($package, $installPath);
 		}
+		$this->filesystem->copyThenRemove($downloadPath, $installPath);
 	}
 
 	protected function removeCode(PackageInterface $package)
@@ -106,6 +105,6 @@ class FrameworkInstallerV8 extends BaseInstaller
 
 	private function CoreConfigExists()
 	{
-		return file_exists('web/intranet/common/config.php');
+		return file_exists('../web/intranet/common/config.php');
 	}
 }
