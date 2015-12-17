@@ -18,6 +18,9 @@ class PhingRunner
 	{
 		$this->io = $io;
 		$this->base_dir = $base_dir;
+		$this->io->write("Debug: phing path is: ".$base_dir);
+		if (!file_exists($base_dir.'/build.xml'))
+			$this->io->write("build.xml doesn't exist there, failure imminent");
 	}
 
 	public function Run($app_code, $action)
