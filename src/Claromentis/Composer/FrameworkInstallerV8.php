@@ -70,13 +70,15 @@ class FrameworkInstallerV8 extends BaseInstaller
 
 		$this->downloadManager->download($package, $downloadPath);
 		$this->io->write("    Download finished, copying the code");
-		if ($this->CoreConfigExists())
+		if (is_dir($downloadPath.'/vendor'))
 		{
-			$this->filesystem->removeDirectory($downloadPath.'/vendor');
-		} else
+			$this->filesystem->removeDirectory($installPath.'/vendor_core');
+			$this->filesystem->rename($downloadPath . '/vendor', $installPath . '/vendor_core');
+		}
+		if (is_dir($downloadPath.'/vendor_core'))
 		{
-			if (is_dir($downloadPath.'/vendor'))
-				$this->filesystem->rename($downloadPath.'/vendor', $downloadPath.'/vendor_core');
+			$this->filesystem->removeDirectory($installPath.'/vendor_core');
+			$this->filesystem->rename($downloadPath . '/vendor_core', $installPath . '/vendor_core');
 		}
 		$this->filesystem->copyThenRemove($downloadPath, $installPath);
 	}
