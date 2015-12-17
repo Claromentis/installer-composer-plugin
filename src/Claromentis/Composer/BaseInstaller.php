@@ -95,7 +95,15 @@ abstract class BaseInstaller implements InstallerInterface
 	 */
 	protected function runPhing($app_code, $action)
 	{
-		$phing_runner = new PhingRunner($this->io);
+		$base_dir = './';
+		if (basename(getcwd()) === 'installer' && !is_dir('web') && is_dir('../web'))
+		{
+			$base_dir = '../';
+		}
+
+		$base_dir .= (file_exists($base_dir.'web/build.xml') && !file_exists($base_dir.'build.xml')) ? 'web' : '';
+
+		$phing_runner = new PhingRunner($this->io, realpath($base_dir));
 		$phing_runner->Run($app_code, $action);
 
 		//$this->io->write('    <warning>===Please run this command===</warning>');

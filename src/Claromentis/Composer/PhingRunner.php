@@ -12,10 +12,12 @@ use Phing;
 class PhingRunner
 {
 	private $io;
+	private $base_dir;
 
-	public function __construct(IOInterface $io)
+	public function __construct(IOInterface $io, $base_dir)
 	{
 		$this->io = $io;
+		$this->base_dir = $base_dir;
 	}
 
 	public function Run($app_code, $action)
@@ -44,8 +46,7 @@ class PhingRunner
 		);
 
 		$old_pwd = getcwd();
-		if (file_exists('web/build.xml') && !file_exists('./build.xml'))
-			chdir('web');
+		chdir($this->base_dir);
 
 		$e = null;
 		try
