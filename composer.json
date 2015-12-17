@@ -13,8 +13,7 @@
     },
     "require": {
         "composer-plugin-api": "^1.0",
-        "phing/phing": "2.x",
-        "symfony/process": "^2.6 | ^3.0"
+        "phing/phing": "2.x"
     },
     "require-dev": {
         "composer/composer": "1.*@dev"
