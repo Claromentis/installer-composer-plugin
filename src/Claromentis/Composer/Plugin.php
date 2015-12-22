@@ -6,7 +6,14 @@ use Composer\DependencyResolver\Operation\UninstallOperation;
 use Composer\DependencyResolver\Operation\UpdateOperation;
 use Composer\EventDispatcher\EventSubscriberInterface;
 use Composer\Installer\PackageEvent;
-use Composer\Package\PackageInterface;
+
+// loading all classes in advance, as autoloader may fail if the plugin is upgraded
+// in process of updating composer dependencies
+require_once(__DIR__.'/BaseInstaller.php');
+require_once(__DIR__.'/FrameworkInstaller.php');
+require_once(__DIR__.'/FrameworkInstallerV8.php');
+require_once(__DIR__.'/ModuleInstallerV7.php');
+require_once(__DIR__.'/PhingRunner.php');
 
 class Plugin implements \Composer\Plugin\PluginInterface, EventSubscriberInterface
 {
