@@ -98,13 +98,22 @@ class FrameworkInstallerV8 extends BaseInstaller
 			$this->runPhing('core', 'upgrade');
 		} else
 		{
+			$this->io->write('Core config file does not exists, so running "phing install"');
 			$this->runPhing('core', 'install');
 		}
 	}
 
 	public function onUpdate(UpdateOperation $operation)
 	{
-		$this->runPhing('core', 'upgrade');
+		if ($this->CoreConfigExists())
+		{
+			$this->io->write('Core config file exists, so running "phing upgrade"');
+			$this->runPhing('core', 'upgrade');
+		} else
+		{
+			$this->io->write('Core config file does not exists, so running "phing install"');
+			$this->runPhing('core', 'install');
+		}
 	}
 
 	private function CoreConfigExists()

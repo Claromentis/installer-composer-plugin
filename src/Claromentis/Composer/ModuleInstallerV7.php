@@ -57,7 +57,8 @@ class ModuleInstallerV7 extends BaseInstaller
 	 */
 	public function getInstallPath(PackageInterface $package)
 	{
-		return 'web/intranet/'.$this->getApplicationCode($package).'/';
+		$web = $this->getWebFolderPath();
+		return $web.'intranet/'.$this->getApplicationCode($package).'/';
 	}
 
 	/**
