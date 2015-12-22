@@ -124,10 +124,10 @@ abstract class BaseInstaller implements InstallerInterface
 	protected function getWebFolderPath()
 	{
 		clearstatcache(true);
-		if (basename(getcwd()) === 'installer' && file_exists('../web/build.xml') && !file_exists('build.xml'))
+		if (basename(getcwd()) === 'installer' && is_dir("../web") && file_exists('../build.xml') && !file_exists('build.xml')) // v8 from 'installer' folder
 		{
 			return '../web/';
-		} elseif (file_exists('web/build.xml'))
+		} elseif (file_exists('web/build.xml')) // v7 installer
 		{
 			return 'web/';
 		} else
