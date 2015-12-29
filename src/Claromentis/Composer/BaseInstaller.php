@@ -127,6 +127,9 @@ abstract class BaseInstaller implements InstallerInterface
 		if (basename(getcwd()) === 'installer' && is_dir("../web") && file_exists('../build.xml') && !file_exists('build.xml')) // v8 from 'installer' folder
 		{
 			return '../web/';
+		} elseif (is_dir('web') && file_exists('build.xml') && !file_exists('web/build.xml')) // v8 developer
+		{
+			return 'web/';
 		} elseif (file_exists('web/build.xml')) // v7 installer
 		{
 			return 'web/';
