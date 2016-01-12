@@ -97,46 +97,12 @@ abstract class BaseInstaller implements InstallerInterface
 	 */
 	protected function runPhing($app_code, $action)
 	{
-		clearstatcache(true);
-		if (basename(getcwd()) === 'installer' && is_dir('../web') && file_exists('../build.xml')) // v8 started from "installer" folder
-		{
-			$base_dir = '../';
-		} elseif (is_dir('web') && file_exists('web/build.xml')) // v7 installer
-		{
-			$base_dir = 'web/';
-		} elseif (basename(getcwd()) === 'web' && file_exists('build.xml')) // v7 developer (shouldn't happen as devs don't install modules using composer)
-		{
-			$base_dir = './';
-		} else
-		{
-			$msg = "Cannot find build.xml (cwd=".getcwd().")";
-			$this->io->writeError($msg);
-			throw new \Exception($msg);
-		}
+		$base_dir = Locator::getBuildXmlPath($this->io);
 
 		$phing_runner = new PhingRunner($this->io, realpath($base_dir));
 		$phing_runner->Run($app_code, $action);
 
 		//$this->io->write('    <warning>===Please run this command===</warning>');
 		//$this->io->write("    phing -Dapp={$app_code} $action");
-	}
-
-	protected function getWebFolderPath()
-	{
-		clearstatcache(true);
-		if (basename(getcwd()) === 'installer' && is_dir("../web") && file_exists('../build.xml') && !file_exists('build.xml')) // v8 from 'installer' folder
-		{
-			return '../web/';
-		} elseif (is_dir('web') && file_exists('build.xml') && !file_exists('web/build.xml')) // v8 developer
-		{
-			return 'web/';
-		} elseif (file_exists('web/build.xml')) // v7 installer
-		{
-			return 'web/';
-		} else
-		{
-			$msg = "Cannot detect location of web folder (cwd=".getcwd().")";
-			throw new \Exception($msg);
-		}
 	}
 }

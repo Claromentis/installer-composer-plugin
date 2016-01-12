@@ -14,12 +14,17 @@ class PhingRunner
 	private $io;
 	private $base_dir;
 
-	public function __construct(IOInterface $io, $base_dir)
+	public function __construct(IOInterface $io, $base_dir = null)
 	{
 		$this->io = $io;
-		$this->base_dir = $base_dir;
+
+		// this is added for compatibility with installer 1.0 when it's upgraded to 1.1
+		if (is_null($base_dir))
+			$base_dir = realpath(Locator::getBuildXmlPath($io));
+
 		if (!file_exists($base_dir.'/build.xml'))
 			$this->io->write("<error>$base_dir/build.xml doesn't exist there, failure imminent</error>");
+		$this->base_dir = $base_dir;
 	}
 
 	public function Run($app_code, $action)
