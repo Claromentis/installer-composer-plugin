@@ -25,6 +25,9 @@ class Locator
 		if (basename(getcwd()) === 'installer' && is_dir('../web') && file_exists('../build.xml')) // v8 started from "installer" folder
 		{
 			$base_dir = '../';
+		} elseif (is_dir('web') && file_exists('build.xml'))     // v8 developer
+		{
+			$base_dir = './';
 		} elseif (is_dir('web') && file_exists('web/build.xml')) // v7 installer
 		{
 			$base_dir = 'web/';
