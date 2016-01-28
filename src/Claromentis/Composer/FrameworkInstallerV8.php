@@ -15,6 +15,8 @@ use Composer\Repository\InstalledRepositoryInterface;
  */
 class FrameworkInstallerV8 extends BaseInstaller
 {
+	const PACKAGE_NAME = 'claromentis/framework';
+
 	public function supports($packageType)
 	{
 		return $packageType === 'claromentis-framework-v8';
@@ -90,29 +92,33 @@ class FrameworkInstallerV8 extends BaseInstaller
 		$this->filesystem->removeDirectory($downloadPath);
 	}
 
-	public function onInstall(InstallOperation $operation)
+	public function onInstall(InstallOperation $operation, &$postinstall_queue)
 	{
 		if ($this->CoreConfigExists())
 		{
 			$this->io->write('<warning>Core config file already exists, so assuming this is an upgrade from pre-installer version. Running "phing upgrade"');
-			$this->runPhing('core', 'upgrade');
+			//$this->runPhing('core', 'upgrade');
+			$postinstall_queue[] = ['upgrade', 'core'];
 		} else
 		{
 			$this->io->write('Core config file does not exists, so running "phing install"');
-			$this->runPhing('core', 'install');
+			//$this->runPhing('core', 'install');
+			$postinstall_queue[] = ['install', 'core'];
 		}
 	}
 
-	public function onUpdate(UpdateOperation $operation)
+	public function onUpdate(UpdateOperation $operation, &$postinstall_queue)
 	{
 		if ($this->CoreConfigExists())
 		{
 			$this->io->write('Core config file exists, so running "phing upgrade"');
-			$this->runPhing('core', 'upgrade');
+			//$this->runPhing('core', 'upgrade');
+			$postinstall_queue[] = ['upgrade', 'core'];
 		} else
 		{
 			$this->io->write('Core config file does not exists, so running "phing install"');
-			$this->runPhing('core', 'install');
+			//$this->runPhing('core', 'install');
+			$postinstall_queue[] = ['install', 'core'];
 		}
 	}
 

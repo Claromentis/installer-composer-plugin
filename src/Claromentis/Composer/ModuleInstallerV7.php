@@ -84,34 +84,32 @@ class ModuleInstallerV7 extends BaseInstaller
 		$this->filesystem->removeDirectory($downloadPath);
 	}
 
-	public function onInstall(InstallOperation $operation)
+	public function onInstall(InstallOperation $operation, &$postinstall_queue)
 	{
 		$package = $operation->getPackage();
-		try
-		{
-			$this->runPhing($this->getApplicationCode($package), 'install');
-		} catch (\Exception $e)
-		{
-			$this->io->writeError("\n\n<warning>Got exception while running phing task. ".get_class($e).': '.$e->getMessage()." </warning>");
-			$this->io->writeError("<info>Trying to run upgrade instead</info>");
-			$this->runPhing($this->getApplicationCode($package), 'upgrade');
-		}
+		$app_code = $this->getApplicationCode($package);
+		$postinstall_queue[] = ['install', $app_code];
 	}
 
-	public function onUpdate(UpdateOperation $operation)
+	public function onUpdate(UpdateOperation $operation, &$postinstall_queue)
 	{
 		$package = $operation->getTargetPackage();
-		$this->runPhing($this->getApplicationCode($package), 'upgrade');
+		$app_code = $this->getApplicationCode($package);
+		//$this->runPhing($app_code, 'upgrade');
+		$postinstall_queue[] = ['upgrade', $app_code];
 	}
 
-	public function onUninstall(UninstallOperation $operation)
+	public function onUninstall(UninstallOperation $operation, &$postinstall_queue)
 	{
 		$package = $operation->getPackage();
 		$code = $this->getApplicationCode($package);
 		if ($this->io->askConfirmation("Do you want to delete all database tables of application '$code'?", false))
+		{
 			$this->runPhing($code, 'uninstall');
-		else
+		} else
+		{
 			$this->io->write("Application code is going to be removed, but the database still has all data");
+		}
 
 		$this->io->write("<warning>Please manually delete all references to $code from the core config file</warning>");
 	}
