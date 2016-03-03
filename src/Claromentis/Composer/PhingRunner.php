@@ -43,7 +43,7 @@ class PhingRunner
 		$old_pwd = getcwd();
 		chdir($this->base_dir);
 
-		$cmd = $phing_path . DIRECTORY_SEPARATOR . "bin" . DIRECTORY_SEPARATOR . "phing -Dapp=$app_code $action";
+		$cmd = PHP_BINARY . ' ' . $phing_path . DIRECTORY_SEPARATOR . "bin" . DIRECTORY_SEPARATOR . "phing -Dapp=$app_code $action";
 		$this->io->write("Running command: $cmd");
 		$ret = -1;
 		passthru($cmd, $ret);
