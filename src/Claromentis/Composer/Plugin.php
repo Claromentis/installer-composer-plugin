@@ -52,7 +52,7 @@ class Plugin implements \Composer\Plugin\PluginInterface, EventSubscriberInterfa
 	public static function getSubscribedEvents()
 	{
 		return array(
-			'pre-dependencies-solving' => 'onPreSolving',
+			//'pre-dependencies-solving' => 'onPreSolving',
 			'post-package-install' => 'onPostInstall',
 			'post-package-update' => 'onPostUpdate',
 			'pre-package-uninstall' => 'onPreUninstall',
@@ -60,7 +60,7 @@ class Plugin implements \Composer\Plugin\PluginInterface, EventSubscriberInterfa
 		);
 	}
 
-	public function onPreSolving(InstallerEvent $event)
+	/*public function onPreSolving(InstallerEvent $event)
 	{
 		$installed_repo = $event->getInstalledRepo();
 
@@ -73,7 +73,7 @@ class Plugin implements \Composer\Plugin\PluginInterface, EventSubscriberInterfa
 		{
 			$event->getIO()->write("Not adding 'local framework' repository, as package already present");
 		}
-	}
+	}*/
 
 	public function onPostInstall(PackageEvent $event)
 	{
