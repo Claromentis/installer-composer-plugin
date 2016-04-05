@@ -82,6 +82,11 @@ class FrameworkInstallerV8 extends BaseInstaller
 			$this->filesystem->removeDirectory($installPath.'/vendor_core');
 			$this->filesystem->rename($downloadPath . '/vendor_core', $installPath . '/vendor_core');
 		}
+		if (is_dir($installPath.'/web/intranet/setup') && is_dir($downloadPath.'/web/intranet/setup'))
+		{
+			$this->filesystem->removeDirectory($installPath.'/web/intranet/setup');
+			$this->filesystem->rename($downloadPath . '/web/intranet/setup', $installPath . '/web/intranet/setup');
+		}
 		$this->filesystem->copyThenRemove($downloadPath, $installPath);
 	}
 

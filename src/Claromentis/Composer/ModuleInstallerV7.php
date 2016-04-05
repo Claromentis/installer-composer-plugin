@@ -57,8 +57,20 @@ class ModuleInstallerV7 extends BaseInstaller
 	 */
 	public function getInstallPath(PackageInterface $package)
 	{
-		$web = Locator::GetWebFolderPath();
+		$web = Locator::getWebFolderPath();
 		return $web.'intranet/'.$this->getApplicationCode($package).'/';
+	}
+
+	protected function installCode(PackageInterface $package)
+	{
+		$installPath = $this->getInstallPath($package);
+
+		if (is_dir($installPath.'/_init'))
+		{
+			$this->filesystem->removeDirectory($installPath.'/_init');
+		}
+
+		parent::installCode($package);
 	}
 
 	/**
