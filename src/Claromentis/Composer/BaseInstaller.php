@@ -69,7 +69,8 @@ abstract class BaseInstaller implements InstallerInterface
 
 	public function updateCode(InstalledRepositoryInterface $repo, PackageInterface $initial, PackageInterface $target)
 	{
-		if (!$repo->hasPackage($initial)) {
+		if (!$repo->hasPackage($initial))
+		{
 			throw new \InvalidArgumentException('Package is not installed: '.$initial);
 		}
 
@@ -79,11 +80,11 @@ abstract class BaseInstaller implements InstallerInterface
 		} else
 		{
 			$this->installCode($target);
-			$repo->removePackage($initial);
-			if (!$repo->hasPackage($target))
-			{
-				$repo->addPackage(clone $target);
-			}
+		}
+		$repo->removePackage($initial);
+		if (!$repo->hasPackage($target))
+		{
+			$repo->addPackage(clone $target);
 		}
 	}
 
