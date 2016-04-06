@@ -1,5 +1,11 @@
 # Change log #
 
+## Versions 1.2.3 ##
+ * Fixed not registering updates for packages installed from git
+
+## Versions 1.2.2 ##
+ * Removing contents of _init folder before applying new update - ensures that no migrations are left from earlier versions
+
 ## Versions 1.2.1 ##
  * Fixed detecting return code of phing task on Windows (was preventing "retry with upgrade" introduced in 1.0.7)
  * Removed fake local repository used for source installation as it's not working as should
