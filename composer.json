@@ -13,7 +13,8 @@
     },
     "require": {
         "composer-plugin-api": "^1.0",
-        "phing/phing": "2.x"
+        "phing/phing": "2.x",
+        "symfony/polyfill-ctype": "v1.10.0"
     },
     "require-dev": {
         "composer/composer": "1.*@dev"
