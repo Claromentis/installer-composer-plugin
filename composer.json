@@ -14,7 +14,7 @@
     "require": {
         "composer-plugin-api": "^1.0",
         "phing/phing": "2.x",
-        "symfony/polyfill-ctype": "1.11.0"
+        "symfony/polyfill-ctype": "1.18.1"
     },
     "require-dev": {
         "composer/composer": "1.*@dev"
