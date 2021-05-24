@@ -1,5 +1,8 @@
 # Change log #
 
+## Version 1.2.7 - 24th May 2021
+* Updated explicit symfony/polyfill-ctype dependency from 1.18.1 to 1.22.1 to allow Core 8.13.0+ to be installed
+
 ## Version 1.2.6 - 17th September 2020
 * Updated explicit symfony/polyfill-ctype dependency from 1.11.0 to 1.18.1 to allow Core 8.11.0+ to be installed
 
